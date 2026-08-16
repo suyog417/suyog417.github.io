@@ -90,7 +90,7 @@ export function HeroCanvas() {
       canvas!.style.width = `${w}px`;
       canvas!.style.height = `${h}px`;
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
-      fontSize = Math.min(w / 8.5, h / 4.4, 108);
+      fontSize = Math.min(w / 8.5, h / 4.8, 108);
 
       // Background dot field, on a grid, skipping the sling corner.
       const step = 34;
@@ -201,14 +201,17 @@ export function HeroCanvas() {
         family = displayFamily();
         Composite.clear(engine.world, false);
 
-        ground = h - 26;
+        // A letter lying on its side is drawn up to ~half a font size below its
+        // body centre, so the floor needs that much clearance or fallen
+        // letters get clipped by the canvas edge and cover the hint text.
+        ground = h - Math.round(fontSize * 0.62);
         anchor = { x: Math.max(104, w * 0.12), y: ground - fontSize * 1.6 };
 
         // Floor and walls, so nothing escapes the frame.
         statics = [
-          Bodies.rectangle(w / 2, ground + 30, w * 2, 60, { isStatic: true }),
-          Bodies.rectangle(-30, h / 2, 60, h * 3, { isStatic: true }),
-          Bodies.rectangle(w + 30, h / 2, 60, h * 3, { isStatic: true }),
+          Bodies.rectangle(w / 2, ground + 100, w * 2, 200, { isStatic: true }),
+          Bodies.rectangle(-100, h / 2, 200, h * 4, { isStatic: true }),
+          Bodies.rectangle(w + 100, h / 2, 200, h * 4, { isStatic: true }),
         ];
         Composite.add(engine.world, statics);
 
@@ -380,6 +383,21 @@ export function HeroCanvas() {
         ctx!.font = `${fontSize}px ${family}`;
         let downNow = 0;
         for (const l of letters) {
+          // Insurance against tunnelling: a letter that leaves the frame is
+          // dropped back in rather than falling out of the world forever.
+          if (
+            l.body.position.x < -40 ||
+            l.body.position.x > w + 40 ||
+            l.body.position.y > h + 40
+          ) {
+            Body.setPosition(l.body, {
+              x: Math.min(Math.max(l.body.position.x, 60), w - 60),
+              y: ground - l.h,
+            });
+            Body.setVelocity(l.body, { x: 0, y: 0 });
+            Body.setAngularVelocity(l.body, 0);
+          }
+
           const tilted = Math.abs(l.body.angle) > KNOCKED;
           if (tilted) downNow += 1;
           ctx!.save();
