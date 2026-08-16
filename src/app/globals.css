@@ -1,26 +1,157 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------------------------------
+   Tokens. Dark is the default; .light on <html> flips it.
+   One accent (signal lime), used only for the score ring, active states and
+   the primary CTA. Everything else is ink, paper and hairlines.
+--------------------------------------------------------------------------- */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #0a0a0b;
+  --bg-raised: #101012;
+  --ink: #f2f1ee;
+  --ink-muted: #8d8d88;
+  --ink-faint: #5a5a56;
+  --line: #232326;
+  --line-strong: #34343a;
+  --accent: #cff44a;
+  --accent-ink: #0a0a0b;
+  --selection: #cff44a;
+}
+
+html.light {
+  --bg: #f7f6f3;
+  --bg-raised: #ffffff;
+  --ink: #16161a;
+  --ink-muted: #63635e;
+  --ink-faint: #93938d;
+  --line: #e2e0da;
+  --line-strong: #cbc9c1;
+  --accent: #7a9b00;
+  --accent-ink: #ffffff;
+  --selection: #cff44a;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--bg);
+  --color-raised: var(--bg-raised);
+  --color-ink: var(--ink);
+  --color-muted: var(--ink-muted);
+  --color-faint: var(--ink-faint);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+
+  --font-display: var(--font-instrument-serif), Georgia, serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-face), ui-monospace, "SF Mono", monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  border-color: var(--line);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-feature-settings: "cv02", "cv03", "cv11";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--selection);
+  color: #0a0a0b;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Theme-toggle labels: driven by the class on <html>, no JS state. */
+.theme-light-only {
+  display: none;
+}
+html.light .theme-light-only {
+  display: inline;
+}
+html.light .theme-dark-only {
+  display: none;
+}
+
+/* Display type: tight tracking at large sizes, always. */
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+}
+
+.mono-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+/* Numerals as design elements: tabular so they don't wobble mid-animation. */
+.numeral {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* The visible grid: hairline column rules behind the page. */
+.grid-rules {
+  background-image: linear-gradient(to right, var(--line) 1px, transparent 1px);
+  background-size: calc(100% / 6) 100%;
+}
+
+/* GSAP reveals set their own transforms; this is the pre-paint state so
+   nothing flashes before ScrollTrigger takes over. Under reduced motion the
+   opacity is forced back to 1 (see below) and GSAP never runs. */
+[data-reveal],
+[data-reveal-item] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  [data-reveal],
+  [data-reveal-item] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Print: the resume path. Keep it readable if someone prints the page. */
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+  }
+  [data-reveal],
+  [data-reveal-item] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
