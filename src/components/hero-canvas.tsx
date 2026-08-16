@@ -51,7 +51,7 @@ export function HeroCanvas() {
       probe.className = "display";
       probe.style.cssText = "position:absolute;visibility:hidden";
       document.body.appendChild(probe);
-      const f = getComputedStyle(probe).fontFamily || "Georgia, serif";
+      const f = getComputedStyle(probe).fontFamily || "Quicksand, sans-serif";
       probe.remove();
       return f;
     }

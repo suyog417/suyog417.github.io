@@ -1,26 +1,25 @@
 import type { Metadata, Viewport } from "next";
-import { Instrument_Serif, Inter, JetBrains_Mono } from "next/font/google";
+import { Quicksand, Roboto_Slab, Roboto_Mono } from "next/font/google";
 import { site } from "@/data/site";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { Cursor } from "@/components/cursor";
 import "./globals.css";
 
-const display = Instrument_Serif({
-  variable: "--font-instrument-serif",
-  subsets: ["latin"],
-  weight: "400",
-  display: "swap",
-});
-
-const sans = Inter({
-  variable: "--font-inter",
+const headingFont = Quicksand({
+  variable: "--font-quicksand",
   subsets: ["latin"],
   display: "swap",
 });
 
-const mono = JetBrains_Mono({
-  variable: "--font-mono-face",
+const bodyFont = Roboto_Slab({
+  variable: "--font-roboto-slab",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const monoFont = Roboto_Mono({
+  variable: "--font-roboto-mono",
   subsets: ["latin"],
   display: "swap",
 });
@@ -115,7 +114,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${display.variable} ${sans.variable} ${mono.variable}`}
+      className={`${headingFont.variable} ${bodyFont.variable} ${monoFont.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />

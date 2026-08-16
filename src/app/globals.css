@@ -43,9 +43,11 @@ html.light {
   --color-accent: var(--accent);
   --color-accent-ink: var(--accent-ink);
 
-  --font-display: var(--font-instrument-serif), Georgia, serif;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-mono-face), ui-monospace, "SF Mono", monospace;
+  --font-display: var(--font-quicksand), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-quicksand), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-roboto-slab), "Roboto Slab", Georgia, serif;
+  --font-body: var(--font-roboto-slab), "Roboto Slab", Georgia, serif;
+  --font-mono: var(--font-roboto-mono), ui-monospace, "SF Mono", monospace;
 }
 
 * {
@@ -60,10 +62,18 @@ html {
 body {
   background: var(--bg);
   color: var(--ink);
-  font-family: var(--font-sans);
-  font-feature-settings: "cv02", "cv03", "cv11";
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
 }
 
 ::selection {
@@ -90,10 +100,10 @@ html.light .theme-dark-only {
 
 /* Display type: tight tracking at large sizes, always. */
 .display {
-  font-family: var(--font-display);
-  font-weight: 400;
-  letter-spacing: -0.03em;
-  line-height: 0.95;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
 }
 
 .mono-label {
