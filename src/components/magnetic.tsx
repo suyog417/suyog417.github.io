@@ -11,10 +11,15 @@ import { useReducedMotion } from "@/lib/use-reduced-motion";
 export function Magnetic({
   children,
   strength = 0.35,
+  // Cap the travel in px: unclamped, `strength` scales with element size, so
+  // two neighbouring buttons both slide inward and overlap when the cursor
+  // sits between them.
+  maxOffset = 8,
   className,
 }: {
   children: React.ReactNode;
   strength?: number;
+  maxOffset?: number;
   className?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -35,9 +40,10 @@ export function Magnetic({
       const radius = Math.max(r.width, r.height) * 1.2;
 
       if (dist < radius) {
+        const clamp = gsap.utils.clamp(-maxOffset, maxOffset);
         gsap.to(el, {
-          x: dx * strength,
-          y: dy * strength,
+          x: clamp(dx * strength),
+          y: clamp(dy * strength),
           duration: 0.4,
           ease: "power3.out",
         });
@@ -51,7 +57,7 @@ export function Magnetic({
       window.removeEventListener("pointermove", onMove);
       gsap.set(el, { x: 0, y: 0 });
     };
-  }, [strength, reduced]);
+  }, [strength, maxOffset, reduced]);
 
   return (
     <span ref={ref} className={`inline-block ${className ?? ""}`}>

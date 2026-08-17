@@ -19,7 +19,7 @@ export function Hero() {
         className="pointer-events-none absolute inset-0 opacity-[0.35] [background-image:linear-gradient(to_right,var(--line)_1px,transparent_1px)] [background-size:calc(100%/6)_100%]"
       />
 
-      <div className="relative mx-auto max-w-6xl px-5 pb-16 pt-10 sm:px-8 sm:pb-24 sm:pt-14">
+      <div className="relative mx-auto max-w-6xl px-5 pt-10 sm:px-8 sm:pt-14">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <p className="mono-label flex items-center gap-3">
             <span
@@ -29,12 +29,17 @@ export function Hero() {
             {site.location} · builds things at 2am
           </p>
           <p className="mono-label hidden sm:block">
-            ↖ knock my name over
+            ↖ knock my stack over
           </p>
         </div>
 
-        <HeroCanvas />
+      </div>
 
+      {/* Outside the centred container on purpose: the slingshot gets the whole
+          viewport width to fling things across. */}
+      <HeroCanvas />
+
+      <div className="relative mx-auto max-w-6xl px-5 pb-16 sm:px-8 sm:pb-24">
         <div className="mt-6 grid gap-10 lg:grid-cols-[1.3fr_1fr] lg:items-end">
           <p className="max-w-xl text-xl leading-relaxed text-muted sm:text-2xl">
             I build apps. Some of them{" "}
@@ -43,7 +48,9 @@ export function Hero() {
             exist because I wanted to see if they&apos;d work.
           </p>
 
-          <div className="flex flex-wrap items-center gap-3 lg:justify-end">
+          {/* gap-6: room for both magnetic buttons to lean toward a cursor
+              sitting between them without their edges meeting. */}
+          <div className="flex flex-wrap items-center gap-6 lg:justify-end">
             <Magnetic>
               <Link
                 href="#work"
